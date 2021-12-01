@@ -41,10 +41,23 @@ function App() {
   };
 
   const handleDaily = (food, quantity) => {
+    let i = -1;
+    food.quantity = quantity;
+
     let newDaily = JSON.parse(JSON.stringify(daily));
 
-    food.quantity = quantity;
-    setDaily([...newDaily, food]);
+    daily.forEach((elem, index) => {
+      if (elem.name === food.name) {
+        i = index;
+      }
+    });
+
+    if (i >= 0) {
+      newDaily[i].quantity = +newDaily[i].quantity + +quantity;
+      setDaily([...newDaily]);
+    } else {
+      setDaily([...newDaily, food]);
+    }
   };
 
   return (
@@ -60,8 +73,8 @@ function App() {
       )}
       <div className="columns">
         <div className="column">
-          {foodsArr.map((elem) => {
-            return <FoodBox foods={elem} addDaily={handleDaily} />;
+          {foodsArr.map((elem, i) => {
+            return <FoodBox key={i} foods={elem} addDaily={handleDaily} />;
           })}
         </div>
         <div className="column">
