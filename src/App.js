@@ -1,24 +1,74 @@
 import React from 'react';
-import logo from './logo.svg';
+import 'bulma/css/bulma.css';
 import './App.css';
+import foods from './foods.json';
+import FoodBox from './components/FoodBox';
+import { useState } from 'react';
+import AddForm from './components/AddForm';
+import Search from './components/Search';
+import DailyBox from './components/DailyBox';
 
 function App() {
+  const [showAddFood, setShowAddFood] = useState(true);
+  const [foodsArr, setFoodsArr] = useState(foods);
+  const [foodSearchArr, setfoodSearchArr] = useState(foods);
+  const [daily, setDaily] = useState([]);
+
+  const handleShowForm = () => {
+    setShowAddFood(!showAddFood);
+  };
+
+  const handleAddFood = (event) => {
+    event.preventDefault();
+
+    let newFood = {
+      name: event.target.name.value,
+      calories: event.target.calories.value,
+      image: event.target.image.value,
+    };
+
+    setFoodsArr([newFood, ...foodsArr]);
+    setShowAddFood(!showAddFood);
+  };
+
+  const handleSearch = (event) => {
+    const buzz = event.target.value;
+    const filteredFoods = foodSearchArr.filter((elem) => {
+      return elem.name.includes(buzz);
+    });
+
+    setFoodsArr(filteredFoods);
+  };
+
+  const handleDaily = (food, quantity) => {
+    let newDaily = JSON.parse(JSON.stringify(daily));
+
+    food.quantity = quantity;
+    setDaily([...newDaily, food]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 className="title">IronNutrition</h1>
+      <Search fnSeach={handleSearch} />
+      {showAddFood ? (
+        <button onClick={handleShowForm} className="button is-info">
+          Add Food
+        </button>
+      ) : (
+        <AddForm btnAdd={handleAddFood} />
+      )}
+      <div className="columns">
+        <div className="column">
+          {foodsArr.map((elem) => {
+            return <FoodBox foods={elem} addDaily={handleDaily} />;
+          })}
+        </div>
+        <div className="column">
+          <h2 className="subtitle">Today's foods</h2>
+          <DailyBox foods={daily} />
+        </div>
+      </div>
     </div>
   );
 }
