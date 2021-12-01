@@ -60,6 +60,13 @@ function App() {
     }
   };
 
+  const handleDailyDelete = (deletedElement) => {
+    let newDaily = JSON.parse(JSON.stringify(daily)).filter((elem) => {
+      return elem.name !== deletedElement;
+    });
+    setDaily([...newDaily]);
+  };
+
   return (
     <div className="App">
       <h1 className="title">IronNutrition</h1>
@@ -79,7 +86,7 @@ function App() {
         </div>
         <div className="column">
           <h2 className="subtitle">Today's foods</h2>
-          <DailyBox foods={daily} />
+          <DailyBox foods={daily} deleteEntry={handleDailyDelete} />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function DailyBox({ foods }) {
+function DailyBox({ foods, deleteEntry }) {
   let total = foods.reduce((sum, acc) => {
     return sum + acc.calories * acc.quantity;
   }, 0);
@@ -11,7 +11,14 @@ function DailyBox({ foods }) {
         {foods.map((elem, i) => {
           return (
             <li key={i}>
-              {elem.quantity} - {elem.name} - {+elem.quantity * +elem.calories}
+              {elem.quantity} - {elem.name} - {+elem.quantity * +elem.calories}{' '}
+              <button
+                onClick={() => {
+                  deleteEntry(elem.name);
+                }}
+              >
+                Delete
+              </button>
             </li>
           );
         })}
